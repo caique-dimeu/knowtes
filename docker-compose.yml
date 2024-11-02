@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  database:
+    build: ./backend/database
+    container_name: mongo_database
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  server:
+    build: ./backend/server
+    container_name: express_server
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_HOST: database
+    depends_on:
+      - database
+
+volumes:
+  mongo_data:

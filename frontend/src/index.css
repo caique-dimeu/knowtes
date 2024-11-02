@@ -1,0 +1,8 @@
+@import url('./styles/_reset.css');
+@import url('./styles/_variables.css');
+
+body {
+    color: var(--neutral-700);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}

@@ -17,6 +17,8 @@ services:
       MONGO_HOST: database
     depends_on:
       - database
+    volumes:
+      - ./backend/server:/app
 
 volumes:
   mongo_data:

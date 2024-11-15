@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const HeaderContainer = styled.header`
+export const NavContainer = styled.header`
     align-items: center;
     background-color: var(--neutral-50);
     box-sizing: border-box;

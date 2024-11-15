@@ -1,22 +1,24 @@
 import Avatar from "../../../../components/Avatar";
-import { BrandContainer, HeaderContainer } from "./styles";
+import { BrandContainer, NavContainer } from "./styles";
 import Icon from "../../../../components/Icons";
 import Dropdown from "../../../../components/Dropdown";
+import { useState } from "react";
 
-export default function Header() {
+export default function Nav() {
+    const [openDropdown, setOpenDropdown] = useState(false);
 
     const handleClickAvatar = () => {
-
+        setOpenDropdown((prev) => !prev);
     }
 
     return (
-        <HeaderContainer>
+        <NavContainer>
             <BrandContainer>
                 <Icon name="sparkle" />
                 <span>Notes</span>
             </BrandContainer>
             <Avatar onClick={handleClickAvatar}/>
-            <Dropdown />
-        </HeaderContainer>
+            {openDropdown && <Dropdown />}
+        </NavContainer>
     );
 }

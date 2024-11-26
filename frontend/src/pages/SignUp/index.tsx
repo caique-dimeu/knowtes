@@ -15,6 +15,9 @@ export default function SignUp() {
 
   return (
     <SignUpContainer>
+      <div id="Aside">~~
+        <span>Cadastre-se no knowtes!</span>
+      </div>
       <SignUpForm />
     </SignUpContainer>
   );

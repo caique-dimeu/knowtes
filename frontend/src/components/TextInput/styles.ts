@@ -9,6 +9,7 @@ export const ContainerInput = styled.div`
         position: relative;
         display: flex;
         flex: 1;
+        
     }
 
     .input {

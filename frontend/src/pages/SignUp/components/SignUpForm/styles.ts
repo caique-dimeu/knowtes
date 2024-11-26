@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const SignUpContent = styled.div`
     display:flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -96,7 +97,7 @@ export const SignUpContent = styled.div`
         color: white;
         transform: translateX(1px); 
     }
-
+    
     @media (max-width: 400) {
         overflow-x:scroll
     }

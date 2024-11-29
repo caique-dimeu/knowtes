@@ -2,16 +2,17 @@ import { useNavigate } from "react-router-dom";
 import ContainerContentLogin from "./components/ContainerContentLogin";
 import { LoginContainer } from "./styles";
 import { useEffect } from "react";
+import { useAuth } from "../../contexts/Auth";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { userId } = useAuth();
 
   useEffect(() => {
-    // Verifica se já existe um token de usuário
-    if (localStorage.getItem('User-token')) {
-      navigate('/');  // Se tiver token, redireciona para a página inicial
+    if (userId) {
+      navigate('/');
     }
-  }, [navigate]);  // Adiciona o `navigate` como dependência
+  }, [navigate, userId]);
 
   return (
     <LoginContainer>

@@ -1,31 +1,31 @@
-const express = require("express");
-const mongoose = require("mongoose");
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const userRoutes = require('./routes/userRoutes');
+const noteRoutes = require('./routes/noteRoutes');  
+const categorieRoutes = require('./routes/categorieRoutes'); 
 
 const app = express();
 const PORT = 3000;
 
-// Configuração de CORS
-const cors = require("cors");
 app.use(cors());
+app.use(bodyParser.json());
 
-// Configuração de conexão com o MongoDB
-const mongoURI = "mongodb://mongo_database:27017/mydatabase";
+const mongoURI = 'mongodb://mongo_database:27017/mydatabase';
 
-mongoose
-  .connect(mongoURI, { useNewUrlParser: true })
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log("Conexão com o MongoDB estabelecida com sucesso.");
+    console.log('Conexão com o MongoDB estabelecida com sucesso.');
   })
   .catch((err) => {
-    console.error("Erro ao conectar ao MongoDB:", err);
+    console.error('Erro ao conectar ao MongoDB:', err);
   });
 
-// endpoint padrao
-app.get("/", (req, res) => {
-  res.send("Servidor Conectado! :D");
-});
+app.use('/users', userRoutes);
+app.use('/notes', noteRoutes);
+app.use('/categories', categorieRoutes);
 
-// Porta do server
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

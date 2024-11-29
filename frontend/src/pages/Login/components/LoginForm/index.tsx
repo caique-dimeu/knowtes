@@ -2,40 +2,18 @@ import { useState } from "react";
 import TextInput from "../../../../components/TextInput";
 import { FormLogin } from "./styles";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../contexts/Auth";
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const [login, setLogin] = useState("");
+  const [userLogin, setUserLogin] = useState("");
   const [pass, setPass] = useState("");
+  const { login } = useAuth();
 
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
+    login(userLogin, pass);
     
-
-    // await fetch('api/validauser', { method: 'POST', body: JSON.stringify({ name, email, pass, confirmpass }) })
-    // .then(response => response.json())
-    // .then(data => {
-    //  if(data.succes){
-    //   localStorage.setItem('User-token', data.data.id);
-    //   navigate('/')
-    //   }
-    //   console.log("Usuário adicionado com sucesso", data);
-    // })
-    // .catch(error => {
-    //   console.error("Erro ao adicionar usuário:", error);
-    // });
-
-    await fetch('https://pokeapi.co/api/v2/pokemon/abra', { method: 'GET'})
-    .then(response => response.json())
-    .then(data => {
-      console.log("somente para simular uma requisição", data);
-      console.log(data.id)
-      localStorage.setItem('User-token', data.id);
-      navigate('/')
-    })
-    .catch(error => {
-      console.error("Erro ao fazer req:", error);
-    });
   }
 
   return (
@@ -59,7 +37,7 @@ export default function LoginForm() {
           </h6>
 
           <div className="inputs">
-            <TextInput label="E-mail" type='email' onChangeText={setLogin} required />
+            <TextInput label="Usuário" type='text' onChangeText={setUserLogin} required />
             <TextInput label="Senha" pass onChangeText={setPass} required />
           </div>
         </div>

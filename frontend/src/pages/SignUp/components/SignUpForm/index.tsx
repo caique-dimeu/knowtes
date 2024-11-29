@@ -2,44 +2,26 @@ import { useState, useRef } from "react";
 import TextInput from "../../../../components/TextInput";
 import { SignUpContent } from "./styles";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../contexts/Auth";
 
 export default function SignUpForm() {
   const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   const [pass, setPass] = useState<string>("");
   const [confirmpass, setConfirmPass] = useState<string>("");
   const navigate = useNavigate();
+  const { register } = useAuth();
+
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
 
-    // Validação das senhas
     if (pass !== confirmpass) {
       alert("As senhas não coincidem!");
       
       return;
     }
+
+    register(name, pass);
     
-
-    // await fetch('api/adduser', { method: 'POST', body: JSON.stringify({ name, email, pass, confirmpass }) })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log("Usuário adicionado com sucesso", data);
-    // })
-    // .catch(error => {
-    //   console.error("Erro ao adicionar usuário:", error);
-    // });
-
-    await fetch('https://pokeapi.co/api/v2/pokemon/ditto', { method: 'GET'})
-    .then(response => response.json())
-    .then(data => {
-      console.log("somente para simular uma requisição", data);
-      console.log(data.id)
-      localStorage.setItem('User-token', data.id);
-      navigate('/')
-    })
-    .catch(error => {
-      console.error("Erro ao fazer req:", error);
-    });
   }
 
   // async function testeStorage() {
@@ -73,7 +55,6 @@ export default function SignUpForm() {
 
           <div className="inputs">
             <TextInput label="Nome completo" onChangeText={setName} required />
-            <TextInput label="E-mail" onChangeText={setEmail} type="email" required />
             <TextInput
               label="Senha"
               pass

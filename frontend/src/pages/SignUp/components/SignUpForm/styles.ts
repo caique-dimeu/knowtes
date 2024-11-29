@@ -4,6 +4,7 @@ export const SignUpContent = styled.div`
     display:flex;
     flex: 1;
     flex-direction: column;
+    height: 100%;
     justify-content: center;
     align-items: center;
     padding: 1rem;

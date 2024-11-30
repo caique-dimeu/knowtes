@@ -13,9 +13,10 @@ import {
 import { faClose, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createNote, deleteNote, editNote } from "../../services/notes";
+import { useAuth } from "../../contexts/Auth";
 
 interface NoteDetails {
-  note: Note;
+  note?: Note;
   showNoteDetails: boolean;
   setShowNoteDetails: React.Dispatch<React.SetStateAction<boolean>>;
   mode: "new" | "old";
@@ -30,19 +31,26 @@ export default function NoteModal({
   onCloseDetails,
 }: NoteDetails) {
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(note.content);
+  const [value, setValue] = useState('');
   const [backupValue, setBackupValue] = useState<string>("");
   const [isClosing, setIsClosing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [title, setTitle] = useState('');
+  const { userId} = useAuth();
 
   const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(event.target.value);
+  };
+
+  const onChangeinput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
   };
 
   const startEditing = () => {
     setIsEditing(true);
     setBackupValue(value);
   };
+
 
   const startDeleting = () => setIsDeleting(true);
 
@@ -68,23 +76,31 @@ export default function NoteModal({
   };
 
   const saveChanges = async () => {
-    try {
-      const res =
-        mode === "old" ? await editNote(note) : await createNote(note);
-      if (res.status === 200) {
-        setIsEditing(false);
-        setBackupValue("");
+    if(!userId) return;
+
+    if (mode === "new") {
+      const newNote = await createNote({title, content: value }, userId);
+      if (newNote) {
+        //adicionar ao state de notas
+        onClose(); 
       }
-    } catch {
-      console.error("failed to save");
+    }
+
+    if(!note) return;
+
+    const updatedNote = await editNote({ ...note, title, content: value });
+
+    if (updatedNote) {
+      setIsEditing(false);
     }
   };
 
   const confirmDeleteNote = async () => {
+    if (!note) return;
     try {
-      const res = await deleteNote(note.noteId);
-      if (res === 200) {
-        setIsDeleting(false);
+      const res = await deleteNote(note._id);
+
+      if(res === 200) {
         onClose();
       }
     } catch {
@@ -96,6 +112,11 @@ export default function NoteModal({
     if (mode === "new") {
       setIsEditing(true);
     }
+
+    if(!note) return;
+  
+    setTitle(note.title);
+    setValue(note.content);
   }, []);
 
   return (
@@ -103,7 +124,7 @@ export default function NoteModal({
       {showNoteDetails && (
         <NoteDetailsContainer>
           <StyledDialog isClosing={isClosing}>
-            <h2>{note.title}</h2>
+            <input value={title} onChange={onChangeinput}></input>
             <CloseButton onClick={onClose}>
               <FontAwesomeIcon icon={faClose} size="lg" />
             </CloseButton>

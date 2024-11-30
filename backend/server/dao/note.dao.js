@@ -1,22 +1,13 @@
 const Note = require('../models/Note');
 const Categorie = require('../models/Categorie');
 
-// Criar nova nota
 exports.create = async (req, res) => {
   try {
-    const { title, content, userid, categoryCode } = req.body;
+    const { title, content, userid } = req.body;
 
-    // Verifica se a categoria existe
-    const existingCategory = await Categorie.findOne({ categoryCode });
-    if (!existingCategory) {
-      return res.status(400).send({ message: 'Category does not exist' });
-    }
-
-    // Cria a nova nota com o campo userid
     const noteData = { title, content, userid, categoryCode };
     const note = await Note.create(noteData);
 
-    // Responde com a nota criada, mas apenas com o campo `content`
     res.status(201).send({
       content: note.content
     });
@@ -25,7 +16,6 @@ exports.create = async (req, res) => {
   }
 };
 
-// Buscar todas as notas (sem incluir o userid)
 exports.findAll = async (req, res) => {
   try {
     const notes = await Note.find().select('-userid');
@@ -35,7 +25,6 @@ exports.findAll = async (req, res) => {
   }
 };
 
-// Buscar notas por usuário (sem incluir o userid)
 exports.findAllByUser = async (req, res) => {
   try {
     const notes = await Note.find({ userid: req.params.userid }).select('-userid');

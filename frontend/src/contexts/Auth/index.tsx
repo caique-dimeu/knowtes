@@ -5,7 +5,7 @@ interface AuthContextData {
   userId: string | null;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
-  logout: (userId: string) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);

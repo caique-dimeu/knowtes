@@ -4,10 +4,10 @@ import {
   faCircleHalfStroke,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import useLogout from "../../hooks/logout";
+import { useAuth } from "../../contexts/Auth";
 
 export default function Dropdown() {
-  const { logout } = useLogout();
+  const { logout } = useAuth();
 
   return (
     <DropdownContainer>

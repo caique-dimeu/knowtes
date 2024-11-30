@@ -1,76 +1,75 @@
 import Note from "../interfaces/note";
 
-const baseUrl = 'localhost:3000';
+const baseUrl = "http://localhost:3000";
 
 export const getNotes = async (userId: string): Promise<Note[]> => {
-    const request = await fetch(`${baseUrl}/notes?userId=${userId}`);
-    const data: Note[] = await request.json();
-    return data;
-}
+  const response = await fetch(`${baseUrl}/notes/user/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
+  if (!response.ok) {
+    throw new Error("Failed to fetch notes!");
+  }
 
-export const createNote = async (note: Note): Promise<{ data: Note[], status: number }> => {
-    const formData = new FormData();
-    formData.append('userId', 'sdfklsçdf');
-    formData.append('content', note.content);
-    formData.append('datetime', new Date().toISOString());
-    formData.append('title', note.title);
-    formData.append('categorie', note.categorie);
-    formData.append('noteId', note.noteId);
-
-    const request = await fetch(`${baseUrl}/notes`, {
-        method: 'POST',
-        body: formData,
-    });
-
-    if (!request.ok) {
-        throw new Error('failed to create note!');
-    }
-
-    const data: Note[] = await request.json();
-    return {
-        data: data,
-        status: request.status,
-    };
+  const data: Note[] = await response.json();
+  return data;
 };
 
-export const editNote = async (note: Note): Promise<{ data: Note[], status: number }> => {
-    const formData = new FormData();
-    formData.append('userId', 'sdfklsçdf');
-    formData.append('content', note.content);
-    formData.append('datetime', new Date().toISOString());
-    formData.append('title', note.title);
-    formData.append('categorie', note.categorie);
-    formData.append('noteId', note.noteId);
+export const createNote = async (note: {title: string, content: string}, userid: string): Promise<Note> => {
+  const response = await fetch(`${baseUrl}/notes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: note.title,
+      content: note.content,
+      userid: userid,
+    }),
+  });
 
-    const request = await fetch(`${baseUrl}/notes`, {
-        method: 'SET',
-        body: formData,
-    });
+  if (!response.ok) {
+    throw new Error("Failed to create note!");
+  }
 
-    if (!request.ok) {
-        throw new Error('failed to create note!');
-    }
+  const data: Note = await response.json();
+  return data;
+};
 
-    const data: Note[] = await request.json();
-    return {
-        data: data,
-        status: request.status,
-    };
-}
+export const editNote = async (note: Note): Promise<Note> => {
+  const response = await fetch(`${baseUrl}/notes/${note._id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: note.title,
+      content: note.content,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update note!");
+  }
+
+  const data: Note = await response.json();
+  return data;
+};
 
 export const deleteNote = async (noteId: string): Promise<number> => {
-    const formData = new FormData();
-    formData.append('noteId', noteId);
+  const response = await fetch(`${baseUrl}/notes/${noteId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    const request = await fetch(`${baseUrl}/notes`, {
-        method: 'DELETE',
-        body: formData,
-    });
+  if (!response.ok) {
+    throw new Error("Failed to delete note!");
+  }
 
-    if (!request.ok) {
-        throw new Error('failed to create note!');
-    }
-
-    return request.status;
-}
+  return response.status;
+};
